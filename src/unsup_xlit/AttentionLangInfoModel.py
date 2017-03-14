@@ -30,10 +30,10 @@ class AttentionModel():
         #self.is_shared_decoder=False
 
         ### share output layers or not
-        print 'Using a different output layer for all target languages'
-        self.use_shared_output=False
-        #print 'Using a shared output for all target languages'
-        #self.use_shared_output=True
+        #print 'Using a different output layer for all target languages'
+        #self.use_shared_output=False
+        print 'Using a shared output for all target languages'
+        self.use_shared_output=True
 
         ### do u want separate input and output embedding vectors (for the same language)
         ### Value should be False. 
