@@ -2,6 +2,7 @@ import argparse
 import os
 import sys
 import codecs
+import pickle
 
 import itertools as it
 import tensorflow as tf
@@ -164,11 +165,13 @@ if __name__ == '__main__' :
         representation = dict([ x.split(':') for x in args.representation.split(',') ])
 
     ## Print Representation and Mappings 
-    print 'Represenation'
+    print 'Representation'
     print representation 
 
     # Creating mapping object to store char-id mappings
     mapping={}
+    lang_id_map={}
+
     shared_phonetic_mapping = Mapping.IndicPhoneticMapping()
     shared_onehot_mapping = Mapping.IndicPhoneticMapping()
 
@@ -193,6 +196,10 @@ if __name__ == '__main__' :
     for lang in all_langs: 
         mapping[lang].get_index(Mapping.create_special_token(lang),lang)
 
+    ## create language map and assign language ids
+    for lid, lang in enumerate(all_langs): 
+        lang_id_map[lang]=lid
+
     # Reading Parallel Training data
     parallel_train_data = dict()
     for lang_pair in parallel_train_langs:
@@ -211,6 +218,12 @@ if __name__ == '__main__' :
     for lang in all_langs: 
         with open(mappings_dir+'/mapping_{}.json'.format(lang),'w') as mapping_json_file:
             mapping[lang].save_mapping(mapping_json_file)
+
+    ## save the language ids
+    with open(mappings_dir+'/lang_ids.json','w') as lang_id_file:
+        pickle.dump(lang_id_map,lang_id_file)
+    print 'Language Ids'
+    print lang_id_map
 
     print 'Vocabulary Statitics'
     for lang in all_langs: 
@@ -238,7 +251,7 @@ if __name__ == '__main__' :
     ###################################################################
 
     # Creating Model object
-    model = AttentionModel.AttentionModel(mapping,representation,max_sequence_length,
+    model = AttentionModel.AttentionModel(lang_id_map,mapping,representation,max_sequence_length,
             embedding_size,enc_rnn_size,dec_rnn_size, 
             enc_type,separate_output_embedding) # Pass parameters
 

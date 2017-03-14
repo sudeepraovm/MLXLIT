@@ -164,6 +164,16 @@ if __name__ == '__main__' :
     print 'Mapping'
     print mapping
 
+    ### Read language id 
+    lang_id_map=None
+    if os.path.exists(mapping_dir+'/lang_ids.json'):  
+        with open(mapping_dir+'/lang_ids.json','r') as lang_id_file:     
+            lang_id_map=pickle.load(lang_id_file)
+        print 'Language Ids'
+        print lang_id_map
+    else:  
+        print 'Warning: language id map file does not exist'
+    
     print 'Vocabulary Statitics'
     for lang in representation.keys(): 
         print '{}: {}'.format(lang,mapping[lang].get_vocab_size())

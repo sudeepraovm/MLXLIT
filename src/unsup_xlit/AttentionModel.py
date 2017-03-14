@@ -6,7 +6,7 @@ from tensorflow.python.ops import rnn, rnn_cell
 
 class AttentionModel():
 
-    def __init__(self,mapping,representation,max_sequence_length,
+    def __init__(self,lang_id_map,mapping,representation,max_sequence_length,
                     embedding_size,enc_rnn_size,dec_rnn_size,
                     enc_type='cnn',separate_output_embedding=False):
 
@@ -20,6 +20,7 @@ class AttentionModel():
         self.mapping = mapping
         self.representation=representation
 
+        self.lang_id_map=lang_id_map
         self.lang_list = self.mapping.keys()
 
         ### use shared decoders or not
